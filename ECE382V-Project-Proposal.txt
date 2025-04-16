@@ -1,0 +1,29 @@
+﻿Title
+Contextualized Human Gestures for UAV Control
+Team Members
+Aditya Gandhi (ag87452)
+Uriel Buitrago (uab62)
+Description
+Our project aims to create an advanced gesture-based control system for drones using zero-shot learning and large language models (LLMs) to classify and interpret novel human gestures without prior training. We will utilize public UAV datasets to train a Computer Vision model for extracting and classifying hand gestures in real time from a drone's video feed. A tracking model like OpenPose will extract hand key points, which will then be interpreted by an LLM-type model to infer user intent and translate it into flight commands. These commands will be tested in a flight simulator to ensure accuracy and safety before real-world deployment. This approach seeks to overcome the limitations of predefined gesture sets by making drone control more intuitive and adaptable. The flowchart below outlines the experiment pipeline of our research.
+Motivation 
+Gesture-based drone control offers a natural and accessible alternative to traditional controllers, expanding use cases in education, remote operations, and multi-drone networks. This project also seeks to lay the groundwork for deploying context-aware gesture recognition systems on consumer-grade drones, showcasing the potential of visually intelligent UAVs. Overall, it explores the future of human-computer interaction by bridging the gap between unpredictable human behavior and precise robotic actions.
+Related Work
+Gesture-based UAV control has seen various approaches, ranging from predefined gesture sets to dynamic and intuitive methods. Brenner and Stütz [3] introduced a modular framework for proxy manipulation gestures, demonstrating effective UAV control using 3D gestures in simulation environments. Their work highlights the challenges of monocular depth estimation and the importance of real-time, low-latency processing for gesture recognition. Shahroudy et al. [1] contributed the NTU RGB+D dataset, advancing 3D human activity recognition. Perera et al. [2] developed the UAV-GESTURE dataset, targeting UAV-specific gestures. Patrona et al. [4] reviewed gesture languages for UAVs, emphasizing intuitive control. Vemprala et al. [5] showcased LLMs’ potential in robotics, facilitating natural language command interpretation. Our approach builds on these advancements by employing zero-shot learning and LLMs to interpret novel gestures contextually, aiming for safer and more adaptable UAV interactions.
+Resources
+Our project will require a DJI Tello drone equipped with a camera for capturing real-time video, a GPU-supported compute unit for processing, and access to open-source UAV gesture datasets such as UAV-GESTURE for training. The software stack will include YOLO for object detection, OpenPose for hand tracking, and a ChatGPT API key for gesture interpretation. We will also utilize the AirSim flight environment for testing control commands and a custom flight control module to translate interpreted gestures into drone movements. Python will be the primary programming language for model integration and command execution. Synthetic datasets may also be required to train the model on uncommon gestures.
+Timeline
+Roughly, the timeline of our work will be first to obtain datasets and train a baseline YOLO model (03/22); then develop a Drone Control Module (03/30); next a Control Testing Framework (04/5); testing and refining our Experiment Pipeline (04/26); and finally Experiment Results (05/05).
+References
+[1]   A. Shahroudy, J. Liu, T.-T. Ng, and G. Wang, “NTU RGB+D: A large-scale dataset for 3D human activity analysis”, in Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016 (DOI: 10.1109/CVPR.2016.115).
+
+
+[2]   A. G. Perera, Y. Wei Law, and J. Chahl, “UAV-GESTURE: A dataset for UAV control and gesture recognition”, in Proceedings of the European Conference on Computer Vision (ECCV), 2018 (DOI: 10.1007/978-3-030-11012-3_9).
+
+
+[3]   Brenner, M., & Stütz, P. (2024). Landing simulated unmanned aerial vehicles with proxy manipulation gestures. AIAA SCITECH 2022 Forum. https://doi.org/10.2514/6.2024-0452
+
+
+[4]   F. Patrona, I. Mademlis, I. Pitas, “An Overview of Hand Gesture Languages for Autonomous UAV Handling”, in Proceedings of the Workshop on Aerial Robotic Systems Physically Interacting with the Environment (AIRPHARO), 2021 (DOI: 10.1109/AIRPHARO52252.2021.9571027).
+
+
+[5]   Vemprala, Sai, Rogerio Bonatti, Arthur Bucker, and Ashish Kapoor. "ChatGPT for Robotics: Design Principles and Model Abilities." Microsoft Autonomous Systems and Robotics Research, 2023. Accessed March 6, 2025. https://www.microsoft.com/en-us/research/uploads/prod/2023/02/ChatGPT___Robotics.pdf.
