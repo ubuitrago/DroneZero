@@ -151,30 +151,34 @@ class Experiment:
             
     def run_experiment(self, 
                       controller: DroneController,
-                      flight_plan: List[Tuple[float, float, float]],
+                      flight_plan: List[Tuple[str, tuple]],
                       additional_data_callback: Optional[callable] = None) -> None:
         """
         Run a complete experiment with the given flight plan.
         
         Args:
             controller (DroneController): The drone controller to use
-            flight_plan (List[Tuple[float, float, float]]): List of (x, y, z) waypoints
+            flight_plan (List[Tuple[str, tuple]]): List of (method_name, args) tuples where:
+                - method_name (str): Name of the DroneController method to call
+                - args (tuple): Arguments to pass to the method
             additional_data_callback (Optional[callable]): Function to get additional data to record
         """
         try:
+            # Start recording before any commands
             self.start_recording()
             
-            # Takeoff
-            controller.takeoff()
-            
-            # Follow flight plan
-            for waypoint in flight_plan:
-                # Move to waypoint
-                controller.client.moveToPositionAsync(
-                    waypoint[0], waypoint[1], -waypoint[2], 5
-                ).join()
+            # Execute each command in the flight plan
+            for method_name, args in flight_plan:
+                # Get the method from the controller
+                method = getattr(controller, method_name)
                 
-                # Record data
+                # Call the method with its arguments
+                if isinstance(args, tuple):
+                    method(*args)
+                else:
+                    method(args)
+                
+                # Record data continuously
                 position = controller.get_position()
                 orientation = controller.get_orientation()
                 velocity = controller.get_velocity()
@@ -189,10 +193,7 @@ class Experiment:
                 
                 if self.record_images:
                     self.save_camera_images()
-                    
-            # Return to home and land
-            controller.return_to_home()
-            controller.land()
             
         finally:
+            # Stop recording after all commands are complete
             self.stop_recording() 
