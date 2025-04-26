@@ -1,4 +1,3 @@
-import airsim
 import os
 import json
 import time
@@ -9,7 +8,7 @@ from drone_control import DroneController
 
 class Experiment:
     def __init__(self, 
-                 experiment_name: str = None,
+                 experiment_name: str = "",
                  save_dir: str = "experiment_data",
                  record_images: bool = True,
                  record_telemetry: bool = True):
@@ -22,15 +21,12 @@ class Experiment:
             record_images (bool): Whether to record camera images
             record_telemetry (bool): Whether to record telemetry data
         """
-        self.client = airsim.MultirotorClient()
-        self.client.confirmConnection()
-        
         # Setup recording parameters
         self.record_images = record_images
         self.record_telemetry = record_telemetry
         
         # Create experiment directory
-        if experiment_name is None:
+        if not experiment_name:
             experiment_name = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.experiment_name = experiment_name
         self.save_dir = os.path.join(save_dir, experiment_name)
@@ -40,26 +36,30 @@ class Experiment:
         self.telemetry_data = []
         self.start_time = None
         
-    def start_recording(self) -> None:
+    def start_recording(self, controller: DroneController) -> None:
         """
         Start recording experiment data.
+        
+        Args:
+            controller (DroneController): The drone controller to use for recording
         """
         self.start_time = time.time()
         
         if self.record_images:
-            # Start recording images from all cameras
-            self.client.startRecording()
+            controller.start_recording()
             
         if self.record_telemetry:
-            # Initialize telemetry data list
             self.telemetry_data = []
             
-    def stop_recording(self) -> None:
+    def stop_recording(self, controller: DroneController) -> None:
         """
         Stop recording and save all experiment data.
+        
+        Args:
+            controller (DroneController): The drone controller to use for recording
         """
         if self.record_images:
-            self.client.stopRecording()
+            controller.stop_recording()
             
         if self.record_telemetry:
             self._save_telemetry_data()
@@ -116,38 +116,17 @@ class Experiment:
         with open(telemetry_file, 'w') as f:
             json.dump(self.telemetry_data, f, indent=4)
             
-    def get_camera_images(self) -> Dict[str, np.ndarray]:
-        """
-        Get images from all cameras.
+    # def save_camera_images(self, controller: DroneController) -> None:
+    #     """
+    #     Save current camera images to the experiment directory.
         
-        Returns:
-            Dict[str, np.ndarray]: Dictionary of camera names and their images
-        """
-        images = {}
-        responses = self.client.simGetImages([
-            airsim.ImageRequest("0", airsim.ImageType.Scene),
-            airsim.ImageRequest("1", airsim.ImageType.Scene)
-        ])
-        
-        for idx, response in enumerate(responses):
-            if response.pixels_as_float:
-                img = np.array(response.image_data_float, dtype=np.float32)
-                img = img.reshape(response.height, response.width)
-            else:
-                img = np.frombuffer(response.image_data_uint8, dtype=np.uint8)
-                img = img.reshape(response.height, response.width, 3)
-            images[f"camera_{idx}"] = img
-            
-        return images
-        
-    def save_camera_images(self) -> None:
-        """
-        Save current camera images to the experiment directory.
-        """
-        images = self.get_camera_images()
-        for camera_name, img in images.items():
-            img_file = os.path.join(self.save_dir, f"{camera_name}_{time.time()}.png")
-            airsim.write_png(img_file, img)
+    #     Args:
+    #         controller (DroneController): The drone controller to use for getting images
+    #     """
+    #     images = controller.get_camera_images()
+    #     for camera_name, img in images.items():
+    #         img_file = os.path.join(self.save_dir, f"{camera_name}_{time.time()}.png")
+    #         airsim.write_png(img_file, img)
             
     def run_experiment(self, 
                       controller: DroneController,
@@ -165,7 +144,7 @@ class Experiment:
         """
         try:
             # Start recording before any commands
-            self.start_recording()
+            self.start_recording(controller)
             
             # Execute each command in the flight plan
             for method_name, args in flight_plan:
@@ -191,9 +170,29 @@ class Experiment:
                     position, orientation, velocity, additional_data
                 )
                 
-                if self.record_images:
-                    self.save_camera_images()
+                # if self.record_images:
+                #     self.save_camera_images(controller)
             
         finally:
             # Stop recording after all commands are complete
-            self.stop_recording() 
+            self.stop_recording(controller)
+
+if __name__ == "__main__":
+    # Create experiment instance
+    # experiment = Experiment(experiment_name="test_experiment")
+    experiment = Experiment()
+    
+    # Create drone controller
+    controller = DroneController()
+    
+    # Define a simple flight plan
+    flight_plan = [
+        ("takeoff", (5.0,)),  # Take off to 5 meters
+        ("move_by_velocity", (1.0, 0.0, 0.0, 2.0)),  # Move forward at 1 m/s for 2 seconds
+        ("move_by_velocity", (-1.0, 0.0, 0.0, 2.0)),  # Move backward at 1 m/s for 2 seconds
+        ("land", ())  # Land safely
+    ]
+    
+    # Run the experiment
+    experiment.run_experiment(controller, flight_plan)
+    

@@ -3,7 +3,7 @@ This module is based on and extends the functionality of the original airsim_wra
 from the PromptCraft-Robotics GitHub repository (https://github.com/PromptCraft-Robotics).
 
 Original work Copyright (c) PromptCraft-Robotics
-Modifications Copyright (c) 2025 Aditya Gandhi and Uriel Buitrago
+Modifications Copyright (c) 2025 Uriel Buitrago
 
 This work is licensed under the same terms as the original PromptCraft-Robotics repository.
 For more information, see the original repository's LICENSE file.
@@ -269,6 +269,50 @@ class DroneController:
         except Exception as e:
             print(f"Gesture command execution failed: {str(e)}")
             return False
+            
+    def start_recording(self) -> None:
+        """
+        Start recording camera images.
+        """
+        self.client.startRecording()
+        
+    def stop_recording(self) -> None:
+        """
+        Stop recording camera images.
+        """
+        self.client.stopRecording()
+        
+    def get_camera_images(self) -> Dict[str, np.ndarray]:
+        """
+        Get images from all cameras.
+        
+        Returns:
+            Dict[str, np.ndarray]: Dictionary of camera names and their images
+        """
+        images = {}
+        responses = self.client.simGetImages([
+            airsim.ImageRequest("0", airsim.ImageType.Scene),
+            airsim.ImageRequest("1", airsim.ImageType.Scene)
+        ])
+        
+        for idx, response in enumerate(responses):
+            if response.pixels_as_float:
+                img = np.array(response.image_data_float, dtype=np.float32)
+                img = img.reshape(response.height, response.width)
+            else:
+                # Get the actual image dimensions from the response
+                img1d = np.frombuffer(response.image_data_uint8, dtype=np.uint8)
+                # Calculate the expected size based on height and width
+                expected_size = response.height * response.width * 3
+                if len(img1d) == expected_size:
+                    img = img1d.reshape(response.height, response.width, 3)
+                else:
+                    # If size doesn't match, try to handle it gracefully
+                    print(f"Warning: Image size mismatch for camera {idx}. Expected {expected_size}, got {len(img1d)}")
+                    continue
+            images[f"camera_{idx}"] = img
+            
+        return images
             
     def __del__(self):
         """
