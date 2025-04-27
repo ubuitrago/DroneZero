@@ -1,5 +1,5 @@
 """
-Agent for generating flight plans based on ZSLAgent insight and output.
+LLM Intent Inference Agent for generating flight plans based on ZSLAgent insight and output.
 This module uses langroid for language model integration and vision capabilities.
 """
 
