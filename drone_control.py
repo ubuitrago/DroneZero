@@ -195,7 +195,13 @@ class DroneController:
         roll, pitch, yaw = airsim.to_eularian_angles(orientation_quat)
         return (roll, pitch, yaw)
         
-    def fly_path(self, points):
+    def fly_path(self, points: List[Tuple[float, float, float]]) -> None:
+        """
+        Fly the drone along a 3r vector path 
+
+        Args:
+            points (List[Tuple[float, float, float]]): List of points to fly to
+        """
         airsim_points = []
         for point in points:
             if point[2] > 0:
@@ -244,30 +250,6 @@ class DroneController:
             return True
         except Exception as e:
             print(f"Return to home failed: {str(e)}")
-            return False
-        
-    def execute_gesture_command(self, gesture_data: Dict) -> bool:
-        """
-        Execute a drone command based on gesture data.
-        
-        Args:
-            gesture_data (Dict): Dictionary containing gesture interpretation
-            
-        Returns:
-            bool: True if command was executed successfully
-        """
-        # This method will be expanded based on your gesture recognition system
-        # For now, it's a placeholder that can be customized
-        try:
-            # Example implementation - to be modified based on your gesture system
-            if gesture_data.get("command") == "move_forward":
-                return self.move_by_velocity(1.0, 0.0, 0.0, 1.0)
-            elif gesture_data.get("command") == "move_backward":
-                return self.move_by_velocity(-1.0, 0.0, 0.0, 1.0)
-            # Add more gesture commands as needed
-            return False
-        except Exception as e:
-            print(f"Gesture command execution failed: {str(e)}")
             return False
             
     def start_recording(self) -> None:

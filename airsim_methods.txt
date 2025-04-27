@@ -1,0 +1,126 @@
+Here are the function prototypes with typing and doctrings. Use them to build a flight plan that will control the drone.
+
+def takeoff(self, altitude: float = 5.0) -> bool:
+        """
+        Take off to a specified altitude.
+        
+        Args:
+            altitude (float): Target altitude in meters
+            
+        Returns:
+            bool: True if takeoff was successful
+        """
+            
+    def land(self) -> bool:
+        """
+        Land the drone safely.
+        
+        Returns:
+            bool: True if landing was successful
+        """
+            
+    def move_by_velocity(self, vx: float, vy: float, vz: float, duration: float) -> bool:
+        """
+        Move the drone by velocity for a specified duration.
+        
+        Args:
+            vx (float): Velocity in x direction (m/s)
+            vy (float): Velocity in y direction (m/s)
+            vz (float): Velocity in z direction (m/s)
+            duration (float): Duration of movement in seconds
+            
+        Returns:
+            bool: True if movement was successful
+        """
+            
+    def get_position(self) -> Tuple[float, float, float]:
+        """
+        Get current position of the drone.
+        
+        Returns:
+            Tuple[float, float, float]: (x, y, z) position in meters
+        """
+        
+    def get_velocity(self) -> Tuple[float, float, float]:
+        """
+        Get current velocity of the drone.
+        
+        Returns:
+            Tuple[float, float, float]: (vx, vy, vz) velocity in m/s
+        """
+    
+    def set_yaw(self, yaw: float) -> None:
+        """
+        Set internal yaw of the drone.
+        
+        Args:
+            yaw (float): Target yaw angle in degrees
+            
+        Returns:
+            None
+        """
+
+    def get_yaw(self) -> float:
+        """
+        Get current yaw of the drone.
+
+        Returns:
+            float: yaw in degrees
+        """
+        
+    def get_pitch(self) -> float:
+        """
+        Get current pitch of the drone.
+        
+        Returns:
+            float: pitch in degrees
+        """
+
+    def get_roll(self) -> float:
+        """
+        Get current roll of the drone.
+        
+        Returns:
+            float: roll in degrees
+        """
+        
+    def set_orientation(self, pitch: float, roll: float, yaw: float) -> None:
+        """
+        Set the complete orientation of the drone.
+        
+        Args:
+            pitch (float): Target pitch angle in degrees
+            roll (float): Target roll angle in degrees
+            yaw (float): Target yaw angle in degrees
+            
+        Returns:
+            None
+        """
+        
+    def get_orientation(self) -> Tuple[float, float, float]:
+        """
+        Get the complete orientation of the drone.
+        
+        Returns:
+            Tuple[float, float, float]: (roll, pitch, yaw) in degrees
+        """
+        
+    def fly_path(self, points: List[Tuple[float, float, float]]) -> None:
+        """
+        Fly the drone along a 3r vector path 
+
+        Args:
+            points (List[Tuple[float, float, float]]): List of points to fly to
+        """
+        
+    def return_to_home(self, altitude: Optional[float] = None) -> bool:
+        """
+        Return the drone to its takeoff position (home position).
+        
+        Args:
+            altitude (Optional[float]): If specified, the drone will first move to this altitude
+                                      before returning to home. If None, uses current altitude.
+            
+        Returns:
+            bool: True if return to home was successful
+        """
