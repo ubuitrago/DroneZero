@@ -1,0 +1,27 @@
+Frame 30:
+Gesture: Move Ahead
+Confidence: 0.64
+Context: Arms extended from body and held horizontal to shoulders with hands up raised above eye level, palms facing backwards. 
+Execute beckoning arm motion angled back-ward. Rapidity indicates speed desired of aircraft.
+--------------------------------------------------
+Frame 60:
+Gesture: All Clear
+Confidence: 0.60
+Context: All is clear, no worries for collisions
+--------------------------------------------------
+Frame 90:
+Gesture: All Clear
+Confidence: 0.58
+Context: All is clear, no worries for collisions
+--------------------------------------------------
+Frame 120:
+Gesture: All Clear
+Confidence: 0.70
+Context: All is clear, no worries for collisions
+--------------------------------------------------
+Frame 150:
+Gesture: Move Ahead
+Confidence: 0.72
+Context: Arms extended from body and held horizontal to shoulders with hands upraised above eye level, palms facing backwards. 
+Execute beckoning arm motion angled back-ward. Rapidity indicates speed desired of aircraft.
+--------------------------------------------------

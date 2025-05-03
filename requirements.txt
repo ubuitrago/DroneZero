@@ -2,3 +2,6 @@ numpy
 airsim
 langroid
 python-dotenv
+tensorflow
+mediapipe
+opencv-python

@@ -1,0 +1,5 @@
+{
+    "predicted_gesture": "have command",
+    "reasoning": "The provided context states the gesture involves holding one hand open, motionless, and high above the head with the palm facing forward. The BlazePose model gives an extremely high confidence (0.9999) for 'Have Command', with all other classes near zero, supporting the classification.",
+    "insight": "This gesture is a clear and established command in many visual signaling protocols. For a deaf person or in noisy environments, raising an open hand above the head, palm forward, is a widely accepted sign to indicate that the individual is taking control or requesting attention. For flight planning, this means the drone should recognize this signal as the operator assuming command, ready for further instructions, and should not take any autonomous actions until new explicit commands are received."
+}

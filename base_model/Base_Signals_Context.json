@@ -1,0 +1,18 @@
+{
+    "Command Gestures":{
+        "All Clear": "All is clear, no worries for collisions",
+        "Have Command": "I have command. Hold one hand open,motionless and highabove head, with palmforward",
+        "Hover": "Hover where you are at",
+        "Land": "Come down, land",
+        "Landing Direction": "Marshaler stands witharms raised verticallyabove head and facingtoward the point wherethe aircraft is to land.The arms are loweredrepeatedly from a vertical to a horizontalposition, stopping finallyin the horizontal position.",
+        "Move Ahead": "Arms extended frombody and held horizontal to shoulders with hands up raised above eye level, palms facing backwards. Execute beckoning arm motion angled back-ward. Rapidity indicates speed desired of  aircraft.",
+        "Move Downward":"Arms extended horizontally sidewaysbeckoning downwards,with palms turned down.Speed of movement indicates rate of descent",
+        "Move to left":"Right arm extended horizontally sideways indirection of movementand other arms swungover the head in samedirection, in a repeatingmovement.",
+        "Move to right":"Left arm extended horizontally sideways indirection of movementand other arm swungover the head in thesame direction, in a repeating movement",
+        "Move Upward":"Arms extended horizontally sidewaysbeckoning upwards, withpalms turned up. Speedof movement indicatesrate of ascent.",
+        "Not Clear":"Negative, not clear. Arm held out, hand below waist level, thumbturned  downwards",
+        "Slow Down":"Arms down with palmstowards ground, thenmoved up and downseveral times.",
+        "Wave Off":"Waving of arms over thehead."
+    }
+    
+}        
