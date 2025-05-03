@@ -1,0 +1,18 @@
+Predicted Gesture: Have Command
+Context: "I have command. Hold one hand open,motionless and highabove head, with palmforward",
+Confidence: 0.9999
+
+All Class Probabilities:
+All Clear: 0.0001
+Have Command: 0.9999
+Hover: 0.0000
+Land: 0.0000
+Landing Direction: 0.0000
+Move Ahead: 0.0000
+Move Downward: 0.0000
+Move To Left: 0.0000
+Move To Right: 0.0000
+Move Upward: 0.0000
+Not Clear: 0.0000
+Slow Down: 0.0000
+Wave Off: 0.0000

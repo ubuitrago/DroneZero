@@ -11,6 +11,8 @@ from langroid.language_models.openai_gpt import OpenAIGPTConfig
 from PIL import Image
 import base64
 from io import BytesIO
+import json
+import re
 
 class FlightPlanAgent:
     def __init__(self, 
@@ -34,10 +36,12 @@ class FlightPlanAgent:
         if not system_message:
             system_message = """
             PURPOSE:
-            You are an expert drone flight planner. 
+            You are an expert drone flight planner whom collaborates with an external Zero-Shot-Learning (ZSL) Agent.
+            Do not worry about the ZSLAgent, they will prompt you with input.
+            Your outputs ALWAYS begin with -- ("takeoff", (5.0,)) -- and end with -- ("land", ()). 
 
             TASK:
-            1. Generate accurate flight plans based on the ZSLAgent insight and output
+            1. Generate accurate flight plans based on the provided insight
             2. Consider obstacles, no-fly zones, and mission objectives
             3. Output drone_control methods and necessary parameters
             
@@ -66,7 +70,12 @@ class FlightPlanAgent:
             }
 
             """
+            # Concatenate method prototypes
+            fns = open("airsim_methods.txt", "r")
+            methods = fns.read()
+            fns.close()
             
+            system_message += methods
         # Configure the chat agent
         agent_config = ChatAgentConfig(
             llm=llm_config,
@@ -74,7 +83,7 @@ class FlightPlanAgent:
         )
         
         self.agent = ChatAgent(agent_config)
-        self.task = Task(self.agent)
+        self.task = Task(self.agent, interactive=False)
         
     def _encode_image(self, image: Image.Image) -> str:
         """
@@ -90,24 +99,90 @@ class FlightPlanAgent:
         image.save(buffered, format="JPEG")
         return base64.b64encode(buffered.getvalue()).decode('utf-8')
         
-    def generate_plan(self, zsl_agent_output: str):
+    def generate_plan(self, zsl_agent_output: dict):
         """
         Generate a flight plan based on inputs.
         
         Args:
-            text_input (str): Text description of the mission or environment
+            zsl_agent_output (dict): Output from the ZSL agent containing gesture analysis
             
         Returns:
             List[Tuple[str, tuple]]: List of (method_name, args) tuples for drone control
         """
+        if not zsl_agent_output:
+            print("Warning: Empty ZSL agent output received")
+            return [
+                ("takeoff", (5.0,)),
+                ("land", ())
+            ]
+            
+        # Check if the ZSL agent output indicates an error
+        if zsl_agent_output.get('predicted_gesture') == 'unknown':
+            print(f"Warning: ZSL agent reported an error: {zsl_agent_output.get('reasoning', 'Unknown error')}")
+            return [
+                ("takeoff", (5.0,)),
+                ("land", ())
+            ]
             
         # Get response from the language model
-        response = self.task.run(zsl_agent_output)
-        
-        # Parse the response into a flight plan
-        flight_plan = self._parse_response(response)
-        
-        return flight_plan
+        try:
+            response = self.task.run(zsl_agent_output)
+            
+            if response is None:
+                print("Warning: No response received from language model")
+                return [
+                    ("takeoff", (5.0,)),
+                    ("land", ())
+                ]
+            
+            # Parse the response into a flight plan
+            try:
+                # Try to find JSON object in the response using regex
+                json_match = re.search(r'\{[^{}]*\}', response)
+                if json_match:
+                    json_str = json_match.group(0)
+                    parsed_response = json.loads(json_str)
+                    
+                    if 'flight_plan' in parsed_response:
+                        # Convert string representation of tuples into actual tuples
+                        flight_plan = []
+                        for cmd in parsed_response['flight_plan']:
+                            if isinstance(cmd, str):
+                                # Parse string representation of tuple
+                                method, args = eval(cmd)
+                            else:
+                                # Already in correct format
+                                method, args = cmd
+                            flight_plan.append((method, args))
+                        return flight_plan
+                        
+                # If JSON parsing fails, try to extract information from text
+                flight_plan = []
+                lines = response.split('\n')
+                for line in lines:
+                    if '(' in line and ')' in line:
+                        try:
+                            # Try to evaluate the line as a tuple
+                            cmd = eval(line.strip())
+                            if isinstance(cmd, tuple) and len(cmd) == 2:
+                                flight_plan.append(cmd)
+                        except:
+                            continue
+                        
+                if flight_plan:
+                    return flight_plan
+                    
+            except Exception as e:
+                print(f"Error parsing flight plan: {str(e)}")
+                
+        except Exception as e:
+            print(f"Error generating flight plan: {str(e)}")
+            
+        # If all parsing fails, return a safe default plan
+        return [
+            ("takeoff", (5.0,)),
+            ("land", ())
+        ]
         
     def _parse_response(self, response: str) -> List[Tuple[str, tuple]]:
         """
