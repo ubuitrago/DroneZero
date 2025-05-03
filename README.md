@@ -44,26 +44,46 @@ This project implements a pipeline for controlling a drone using zero-shot learn
   - Outputs the generated flight plan.
 - **Usage:** Run this script to execute the pipeline with the desired inputs.
 
-## Usage
+# Usage
+## Dependencies
 
-To run the pipeline, use the following command:
+It is reccomended to install Anaconda and use the conda virtual environment. This is how we setup our environment for local development. 
 
+Create an environment and install the python package dependencies:
 ```sh
-python run_pipeline.py --text "Fly in a circle" --image "path/to/image.jpg" --sensor "1.0,2.0,3.0"
+conda create -n dronezero python=3.9
+conda activate dronezero
+pip install -r requirements.txt
+```
+## Install the AirSim Inspection Simulator Environment
+1. Download the [PromptCraft-AirSim Inspection Environment](https://github.com/microsoft/PromptCraft-AirSim/releases/download/v0.0.1/AirSimInspection.zip) (Windows only)
+
+2. Extract the zip file to your desired location
+
+3. Navigate to the extracted folder and locate `AirSimInspection.exe`
+
+Note: The AirSim Inspection Environment is currently only available for Windows. Mac and Linux users will need to use a Windows virtual machine or dual boot setup to run the simulator.
+
+Important: Before running the simulator, ensure:
+- You have a dedicated GPU with updated drivers
+- At least 8GB of RAM available
+- Windows 10 or later
+- DirectX 11 or higher installed
+
+## Run Pipeline
+To run the pipeline, follow the below operations
+
+```
+(1) python base_model/input_predict.py /ABS_PATH/Unseen_Gesture/move-back-10ft-c.mp4
+(2) touch Video_Predictions/.env
+(3) echo "URL=https://i.imgur.com/Dogd2Dh.jpeg" > Video_Predictions/.env
+(4) LAUNCH the AirSim Inspection EXE
+(5) python run_pipeline.py --prediction_dir /ABS_PATH/Video_Predictions/
 ```
 
 ## Logging
 
-Logs are written to the current directory. The log level is set to `INFO`, and new logs are appended to the file.
-
-## Dependencies
-
-- `langroid`
-- `PIL` (Python Imaging Library)
-- `argparse`
-- `json`
-- `logging`
-- `airsim` (for drone control)
+Logs are written to the current directory. The log level is set to `DEBUG`, and new logs are appended to the file.
 
 ## License
 

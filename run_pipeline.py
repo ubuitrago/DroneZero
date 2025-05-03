@@ -95,6 +95,11 @@ def run_pipeline(prediction_dir: str) -> dict:
     Returns:
         dict: Flight plan in the specified format
     """
+    # NOTE: For the demo Video, we copied the ChatDocument output from each agent and created static variables. 
+    # The variables are named as ZSL_DEMO_DICT and FP_AGENT_DEMO_DICT.
+    # The actual implementation of the agents is in the zsl_agent.py and flight_plan_agent.py files.
+    # For the actual implementation, please refer to the files. 
+    # TODO: Fix the errors with Langroid.Task returning None without waiting for the ChatDocument to complete. 
     logger = setup_logging()
     
     # Initialize controller early to ensure it's always available
