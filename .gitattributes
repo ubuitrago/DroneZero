@@ -1,0 +1,3 @@
+Unseen_Gestures.zip filter=lfs diff=lfs merge=lfs -text
+Demos/DroneZero-Full-Pipeline-Demo.mp4 filter=lfs diff=lfs merge=lfs -text
+Demos/Mini-Base-Model-Demo.mp4 filter=lfs diff=lfs merge=lfs -text
