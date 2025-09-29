@@ -1,6 +1,6 @@
 # Drone Control Pipeline
 
-This project implements a pipeline for controlling a drone using zero-shot learning and flight planning. The pipeline processes text, image, and sensor data to generate and execute flight plans. View the final (demo)[https://youtu.be/0jv8yT9oTnY?si=bs-T65mNur3joX2P] video to quickly understand how it works. 
+This project implements a pipeline for controlling a drone using zero-shot learning and flight planning. The pipeline processes text, image, and sensor data to generate and execute flight plans. View the final [demo](https://youtu.be/0jv8yT9oTnY?si=bs-T65mNur3joX2P) video to quickly understand how it works. 
 
 ## Modules
 
